@@ -25,18 +25,6 @@ app.get("/api/hello", function (req, res) {
 });
 
 var response = {}
-/*app.get("/api/timestamp/:date", function(req, res){
-  let input = req.params.date
-  if(input.includes("-")){
-    response["unix"] = new Date(input).getTime()
-    response["utc"] = new Date(input).toUTCString();
-  } else {
-    input = parseInt(input)
-    response["unix"] = new Date(input).getTime();
-    response["utc"] = new Date(input).toUTCString();
-  }
-  res.json(response)
-}) */
 app.get("/api/:date", function(req, res){
   let input = req.params.date
   let integerReg= /^\d+$/;
@@ -44,10 +32,17 @@ app.get("/api/:date", function(req, res){
     response["unix"] = new Date(input).getTime()
     response["utc"] = new Date(input).toUTCString();
   }else {
-    input = parseInt(input)
+    var input2 = parseInt(input)
     response["unix"] = new Date(input).getTime();
-    response["utc"] = new Date(input).toUTCString();
-  }
+    if(!response["unix"]){
+      response["unix"] = new Date(input2).getTime();
+    }
+    response["utc"] = new         Date(input).toUTCString();
+    }
+    if(response["utc"] === "Invalid Date"){
+            response["utc"] = new         Date(input2).toUTCString();
+    }
+  
   /*check for validity*/
   if(!response["unix"] || !response["utc"]){
     res.json({error: "Invalid Date"})
